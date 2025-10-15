@@ -1,0 +1,27 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: postgres
+    password: postgres
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/pedido_db
+  hibernate-orm:
+    database:
+      generation: update
+    log:
+      sql: true
+
+mp:
+  messaging:
+    outgoing:
+      pedido-criado:
+        connector: quarkus-messaging-kafka
+        topic: pedidos
+        value:
+          serializer: org.apache.kafka.common.serialization.StringSerializer
+    incoming:
+      orcamento-gerado:
+        connector: quarkus-messaging-kafka
+        topic: orcamentos
+        value:
+          deserializer: org.apache.kafka.common.serialization.StringDeserializer
