@@ -1,4 +1,4 @@
-package org.acme.domain;
+package org.acme.domain.services;
 
 import org.acme.domain.exceptions.DomainExceptions;
 import org.acme.domain.model.Pedido;
