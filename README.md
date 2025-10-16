@@ -1,98 +1,63 @@
-# code-with-quarkus
+3️⃣ Workflow completo da aplicação
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Agora vamos detalhar todo o ciclo que você quer implementar:
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+1️⃣ Criar Pedido
 
-## Running the application in dev mode
+Input: JSON via REST (PedidoController).
 
-You can run your application in dev mode that enables live coding using:
+Use Case: CriarPedidoUseCase
 
-```shell script
-./mvnw quarkus:dev
-```
+Domain: Cria Pedido e valida status/valores.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+Gateway: Persiste pedido (PedidoRepository) e publica evento PedidoCriadoEvent no Kafka.
 
-## Packaging and running the application
+2️⃣ Gerar Orçamento
 
-The application can be packaged using:
+Input: Evento PedidoCriadoEvent consumido do Kafka.
 
-```shell script
-./mvnw package
-```
+Use Case: GerarOrcamentoUseCase
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+Domain: Cria Orcamento associado ao pedido, calcula valor total, define status inicial (GERADO).
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+Gateway: Persiste Orcamento e publica evento OrcamentoGeradoEvent.
 
-If you want to build an _über-jar_, execute the following command:
+3️⃣ Aprovar Orçamento
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+Input: Evento OrcamentoGeradoEvent (ou diretamente chamada da UI)
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Use Case: AprovarOrcamentoUseCase
 
-## Creating a native executable
+Domain: Valida se pedido pode ser aprovado, muda status do orçamento para ACEITO.
 
-You can create a native executable using:
+Gateway: Persiste mudanças e publica evento OrcamentoAprovadoEvent.
 
-```shell script
-./mvnw package -Dnative
-```
+4️⃣ Processar Pagamento
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Input: Evento OrcamentoAprovadoEvent ou ação do cliente via UI
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+Use Case: ProcessarPagamentoUseCase
 
-You can then execute your native executable with: `./target/code-with-quarkus-1.0.0-SNAPSHOT-runner`
+Domain: Cria Pagamento, define status inicial PENDENTE
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+Gateway: Persiste pagamento e, se sucesso, publica PagamentoConfirmadoEvent.
 
-## Related Guides
+5️⃣ Atualizar Status do Pedido
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Hibernate Validator ([guide](https://quarkus.io/guides/validation)): Validate object properties (field, getter) and method parameters for your beans (REST, CDI, Jakarta Persistence)
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Messaging - Kafka Connector ([guide](https://quarkus.io/guides/kafka-getting-started)): Connect to Kafka with Reactive Messaging
-- YAML Configuration ([guide](https://quarkus.io/guides/config-yaml)): Use YAML to configure your Quarkus application
-- Scheduler ([guide](https://quarkus.io/guides/scheduler)): Schedule jobs and tasks
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- Logging JSON ([guide](https://quarkus.io/guides/logging#json-logging)): Add JSON formatter for console logging
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
+Input: Evento PagamentoConfirmadoEvent
 
-## Provided Code
+Use Case: AtualizarStatusPedidoUseCase
 
-### YAML Config
+Domain: Muda status do Pedido para APROVADO.
 
-Configure your application with YAML
+Gateway: Persiste mudança e, opcionalmente, publica evento PedidoAprovadoEvent para notificação ou relatórios.
 
-[Related guide section...](https://quarkus.io/guides/config-reference#configuration-examples)
+🔁 Observações Importantes
 
-The Quarkus application configuration is located in `src/main/resources/application.yml`.
+Cada passo é atomizado em um use case → manutenção fácil e testes unitários isolados.
 
-### Hibernate ORM
+Consumers do Kafka nunca contêm regras de negócio → apenas repassam eventos.
 
-Create your first JPA entity
+Gateways (JPA/Kafka) ficam somente na camada de infra.
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### Messaging codestart
-
-Use Quarkus Messaging
-
-[Related Apache Kafka guide section...](https://quarkus.io/guides/kafka-reactive-getting-started)
-
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+Você pode adicionar Notificações ao cliente, Fila de compensação, ou Jobs agendados como “listeners” de eventos, sem tocar na camada de domain.
