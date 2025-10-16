@@ -2,7 +2,6 @@ package org.acme.infra.gateways;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.acme.application.gateways.PedidoGateway;
 import org.acme.domain.event.PedidoEvent;
 import org.acme.domain.model.Pedido;
 import org.acme.infra.mapper.PedidoMapper;
@@ -12,15 +11,14 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @ApplicationScoped
-public class PedidoGatewayAdapter implements PedidoGateway  {
+public class PedidoGateway implements org.acme.application.gateways.PedidoGateway {
 
     @Inject
     PedidoEntityRepository repository;
 
     @Inject
-    @Channel("pedido-event-out")
+    @Channel("pedido-criado")
     Emitter<PedidoEvent> emitter;
-
 
     @Override
     public void criarPedido(Pedido pedido) {
@@ -29,6 +27,5 @@ public class PedidoGatewayAdapter implements PedidoGateway  {
 
         PedidoEvent event = PedidoMapper.toEvent(pedido);
         emitter.send(event);
-
     }
 }

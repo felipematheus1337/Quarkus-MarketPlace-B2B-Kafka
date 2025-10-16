@@ -10,7 +10,7 @@ public class PedidoEvent {
     public PedidoEvent() {
     }
 
-    public PedidoEvent(String pedidoId, String cliente, BigDecimal valor) {
+    public PedidoEvent(String pedidoId, BigDecimal valor) {
         this.pedidoId = pedidoId;
         this.valor = valor;
     }

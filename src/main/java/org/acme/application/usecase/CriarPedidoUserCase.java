@@ -1,6 +1,5 @@
 package org.acme.application.usecase;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import org.acme.application.gateways.PedidoGateway;
 import org.acme.domain.exceptions.DomainExceptions;
 import org.acme.domain.model.Pedido;

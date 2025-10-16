@@ -19,7 +19,7 @@ public class PedidoEntity {
     public PedidoEntity() {
     }
 
-    public PedidoEntity(String id, BigDecimal valorTotal) {
+    public PedidoEntity(String id, BigDecimal valorTotal, String status) {
         this.id = id;
         this.valorTotal = valorTotal;
     }
