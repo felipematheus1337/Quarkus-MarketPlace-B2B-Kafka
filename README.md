@@ -28,6 +28,7 @@ Domain: Cria Pedido e valida status/valores.
 
 Gateway: Persiste pedido (PedidoRepository) e publica evento PedidoCriadoEvent no Kafka.
 
+<hr/>
 2️⃣ Gerar Orçamento
 
 Input: Evento PedidoCriadoEvent consumido do Kafka.
@@ -37,6 +38,7 @@ Use Case: GerarOrcamentoUseCase
 Domain: Cria Orcamento associado ao pedido, calcula valor total, define status inicial (GERADO).
 
 Gateway: Persiste Orcamento e publica evento OrcamentoGeradoEvent.
+<hr/>
 
 3️⃣ Aprovar Orçamento
 
@@ -48,6 +50,7 @@ Domain: Valida se pedido pode ser aprovado, muda status do orçamento para ACEIT
 
 Gateway: Persiste mudanças e publica evento OrcamentoAprovadoEvent.
 
+<hr/>
 4️⃣ Processar Pagamento
 
 Input: Evento OrcamentoAprovadoEvent ou ação do cliente via UI
@@ -58,6 +61,7 @@ Domain: Cria Pagamento, define status inicial PENDENTE
 
 Gateway: Persiste pagamento e, se sucesso, publica PagamentoConfirmadoEvent.
 
+<hr/>
 5️⃣ Atualizar Status do Pedido
 
 Input: Evento PagamentoConfirmadoEvent
