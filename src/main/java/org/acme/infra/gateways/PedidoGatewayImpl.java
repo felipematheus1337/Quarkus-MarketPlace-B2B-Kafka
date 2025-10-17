@@ -3,9 +3,9 @@ package org.acme.infra.gateways;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import org.acme.application.gateways.PedidoGateway;
 import org.acme.domain.event.PedidoEvent;
 import org.acme.domain.model.Pedido;
-import org.acme.domain.model.enuns.PedidoStatus;
 import org.acme.infra.mapper.PedidoMapper;
 import org.acme.infra.persistence.entities.PedidoEntity;
 import org.acme.infra.persistence.repositories.PedidoEntityRepository;
@@ -13,7 +13,7 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @ApplicationScoped
-public class PedidoGateway implements org.acme.application.gateways.PedidoGateway {
+public class PedidoGatewayImpl implements PedidoGateway {
 
     @Inject
     PedidoEntityRepository repository;

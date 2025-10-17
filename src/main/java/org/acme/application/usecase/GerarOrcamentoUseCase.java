@@ -24,7 +24,6 @@ public class GerarOrcamentoUseCase {
         BigDecimal novoValor = this.calcularValor(pedido);
         Orcamento orcamento = new Orcamento(pedido.getId(), UUID.randomUUID(), novoValor);
 
-
         orcamentoGateway.criarOrcamento(orcamento);
     }
 

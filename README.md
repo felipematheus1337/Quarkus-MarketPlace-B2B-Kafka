@@ -1,6 +1,22 @@
-3️⃣ Workflow completo da aplicação
+# 🧾 Orçamento Service
 
-Agora vamos detalhar todo o ciclo que você quer implementar:
+Um microserviço desenvolvido com **Quarkus**, **Jakarta**, **Panache** e **MicroProfile Reactive Messaging**, responsável por **gerenciar orçamentos** e **emitir eventos de domínio** de forma assíncrona.
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- **Quarkus** (Java moderno, rápido e nativo)
+- **Jakarta Persistence (JPA)** com **Hibernate ORM Panache**
+- **MicroProfile Reactive Messaging**
+- **Kafka** (para mensageria assíncrona)
+- **RESTEasy Reactive** (para endpoints HTTP)
+- **Mapper** (para mapeamento entre Domain ↔ Entity ↔ Event)
+- **PostgreSQL** (persistência)
+
+
+
+## 3️⃣ Workflow completo da aplicação
 
 1️⃣ Criar Pedido
 
